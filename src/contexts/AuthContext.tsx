@@ -134,10 +134,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          name: formData.name,
-          lastName: formData.lastname,
-          email: formData.email,
-          password: formData.password,
+          ...formData,
           ip,
           city: city.name,
           country: country.name,
