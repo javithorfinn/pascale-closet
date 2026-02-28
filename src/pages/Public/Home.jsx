@@ -20,19 +20,19 @@ export const Home = () => {
   const [showAdd, setShowAdd] = useState(false);
   const { setDiscount, discount, discountContent } = useCart();
 
-  const newHires = products
+  const newHires = Array.isArray(products) ? products
     .sort(
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     )
-    .slice(0, 6);
+    .slice(0, 6) : [];
 
-  const bestSellerProduct = products
+  const bestSellerProduct = Array.isArray(products) ? products
     .sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
     )
-    .slice(0, 4);
+    .slice(0, 4) : [];
 
   useEffect(() => {
     if (!discountContent?.discount_is_active || discount > 0) return;
@@ -73,7 +73,7 @@ export const Home = () => {
       <section className="relative h-[70vh] md:h-[85vh] overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={heroData && heroData.url_image}
+            src={heroData && heroData.hero_url_image}
             alt="Pascale Closet Collection"
             className="w-full h-full object-cover"
           />

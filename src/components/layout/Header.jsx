@@ -14,9 +14,9 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getCartItemsCount } = useCart();
   const [isTabOpen, setIsTabOpen] = useState(false);
-  const cleanedProducts = [
+  const cleanedProducts = Array.isArray(products) ? [
     ...new Map(products.map((p) => [p.category, p])).values(),
-  ];
+  ] : [];
   const location = useLocation();
 
   const categories = [
