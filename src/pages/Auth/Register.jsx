@@ -10,6 +10,7 @@ export const Register = () => {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: "buyer",
   });
   const [errors, setErrors] = useState({});
@@ -72,8 +73,10 @@ export const Register = () => {
       setErrors(newErrors);
       return;
     }
+    // eslint-disable-next-line no-unused-vars
+    const { confirmPassword, ...sendData } = formData;
     
-    await register(formData);
+    await register(sendData);
     await refreshUser();
   };
 
