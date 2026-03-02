@@ -42,7 +42,7 @@ interface NewProduct {
   color: string;
   category: string;
   user_id: string;
-  image: File | string;
+  images: File;
 }
 
 interface ProductContextType {
@@ -197,7 +197,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       formData.append("color", newProduct.color);
       formData.append("category", newProduct.category);
       formData.append("user_id", newProduct.user_id);
-      formData.append("image", newProduct.image);
+      formData.append("images", newProduct.images);
 
       const response = await fetch(
         `${import.meta.env.VITE_BACK_API_URL}/product`,

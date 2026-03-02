@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Input from "../../components/common/Input";
 import { useProducts } from "../../contexts/ProductContext";
@@ -24,7 +24,7 @@ const ProductForm = () => {
     price: "",
     stock: "",
     condition: "new",
-    image: null,
+    images: null,
     description: "",
     brand: "",
     temp: "",
@@ -52,7 +52,7 @@ const ProductForm = () => {
           originalPrice: product.originalPrice || "",
           stock: product.stock || "",
           condition: product.condition || "new",
-          image: product.image || null,
+          images: product.images || null,
           brand: product.brand || "",
           temp: product.temp || "",
           size: product.size || "",
@@ -147,7 +147,7 @@ const ProductForm = () => {
 
     if (validFiles.length > 0) {
       setPreviewImages((prev) => [...prev, ...validFiles]);
-      setFormData((prev) => ({ ...prev, image: validFiles[0].file }));
+      setFormData((prev) => ({ ...prev, images: validFiles }));
     }
   };
 
