@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import Button from "../../components/common/Button";
 import { useProducts } from "../../contexts/ProductContext";
 import { closeDialog, showDialog } from "../../components/common/Dialog";
 
@@ -12,13 +11,13 @@ const ProductManagement = () => {
   } = useProducts();
   const [filter, setFilter] = useState("");
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (productId: string) => {
     showDialog({
       title: "Eliminar producto",
       content: (
         <div>
           <div className="mb-3">
-            <p>¿Estas seguro de que quieres eliminar el producto?</p>
+            <p className="text-sm">¿Estas seguro de que quieres eliminar el producto?</p>
           </div>
           <div className="flex gap-4 justify-center">
             <button
@@ -213,7 +212,7 @@ const ProductManagement = () => {
                         className={`font-sans-elegant font-medium ${
                           product.stock === 0
                             ? "text-[#2C2420]"
-                            : product.stock < 10
+                            : product.stock && product.stock < 10
                               ? "text-[#7A6B5A]"
                               : "text-[#2C2420]"
                         }`}

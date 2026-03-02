@@ -11,7 +11,7 @@ import { useAuth } from "./AuthContext";
 import { toast } from "../components/common/Toast";
 
 export interface Product {
-  id: string | number;
+  id: string;
   name: string;
   price: number;
   stock?: number;
@@ -23,6 +23,7 @@ export interface Product {
   color?: string;
   category?: string;
   image?: string;
+  status?: string;
   user_id?: string;
   created_at?: string;
   updated_at?: string;
