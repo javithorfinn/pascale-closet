@@ -8,7 +8,7 @@ type InputProps = ComponentProps<"input">;
 
 interface CustomInputsProps extends InputProps {
   label: string;
-  error: Error | string;
+  error?: Error | string;
 }
 
 const Input = ({

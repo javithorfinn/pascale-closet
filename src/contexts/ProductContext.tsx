@@ -30,10 +30,16 @@ export interface Product {
   [key: string]: unknown;
 }
 
+export interface ImagePreview {
+  file: File;
+  id: string;
+  preview: string;
+}
+
 interface NewProduct {
   name: string;
-  price: number;
-  stock: number;
+  price: number | string;
+  stock: number | string;
   condition: string;
   description: string;
   brand: string;
@@ -42,7 +48,7 @@ interface NewProduct {
   color: string;
   category: string;
   user_id: string;
-  images: File;
+  images: ImagePreview[] | null;
 }
 
 interface ProductContextType {
@@ -55,7 +61,7 @@ interface ProductContextType {
   createNewProduct: (newProduct: NewProduct) => Promise<void>;
   updateProduct: (
     productId: string | number,
-    updatedProduct: Partial<Product>,
+    updatedProduct: NewProduct,
   ) => Promise<void>;
   getProductByUserId: () => Promise<void>;
   deleteProduct: (productId: string | number) => Promise<void>;
@@ -197,7 +203,12 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       formData.append("color", newProduct.color);
       formData.append("category", newProduct.category);
       formData.append("user_id", newProduct.user_id);
-      formData.append("images", newProduct.images);
+
+      if (newProduct.images && newProduct.images.length > 0) {
+        for (const img of newProduct.images) {
+          formData.append("images", img.file);
+        }
+      }
 
       const response = await fetch(
         `${import.meta.env.VITE_BACK_API_URL}/product`,
@@ -234,17 +245,34 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const updateProduct = async (
     productId: string | number,
-    updatedProduct: Partial<Product>,
+    updatedProduct: NewProduct,
   ) => {
     setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("name", updatedProduct.name);
+      formData.append("price", String(updatedProduct.price));
+      formData.append("stock", String(updatedProduct.stock));
+      formData.append("condition", updatedProduct.condition);
+      formData.append("description", updatedProduct.description);
+      formData.append("brand", updatedProduct.brand);
+      formData.append("temp", updatedProduct.temp);
+      formData.append("size", updatedProduct.size);
+      formData.append("color", updatedProduct.color);
+      formData.append("category", updatedProduct.category);
+
+      if (updatedProduct.images && updatedProduct.images.length > 0) {
+        for (const img of updatedProduct.images) {
+          formData.append("images", img.file);
+        }
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_BACK_API_URL}/product/${productId}`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: "PUT",
           credentials: "include",
-          body: JSON.stringify(updatedProduct),
+          body: formData,
         },
       );
       const result = await response.json();
@@ -254,12 +282,17 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.id === productId
-            ? { ...product, ...updatedProduct }
+            ? { ...product, ...result }
             : product,
         ),
       );
 
-      showDialog({ content: <div>{result.message}</div> });
+      toast({
+        timer: 4,
+        tunner: 20,
+        message: <div>Producto actualizado exitosamente!</div>,
+      });
+      await fetchProducts();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Error desconocido";
       setError(message);

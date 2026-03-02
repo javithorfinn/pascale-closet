@@ -1,13 +1,31 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ChangeEvent, type DragEvent, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Input from "../../components/common/Input";
-import { useProducts } from "../../contexts/ProductContext";
+import { useProducts, type ImagePreview } from "../../contexts/ProductContext";
 import { Loader } from "../../components/common/Loader";
 import { showDialog } from "../../components/common/Dialog";
 import { useAuth } from "../../contexts/AuthContext";
 
+interface ProductFormData {
+  name: string;
+  price: string;
+  stock: string;
+  condition: string;
+  images: ImagePreview[] | null;
+  description: string;
+  brand: string;
+  temp: string;
+  size: string;
+  color: string;
+  category: string;
+  user_id: string;
+  originalPrice?: string;
+}
+
+type FormErrors = Partial<Record<keyof ProductFormData, string>>;
+
 const ProductForm = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const {
@@ -19,7 +37,7 @@ const ProductForm = () => {
   } = useProducts();
   const isEditing = Boolean(id);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     price: "",
     stock: "",
@@ -31,13 +49,13 @@ const ProductForm = () => {
     size: "",
     color: "",
     category: "vestidos",
-    user_id: user.user_id,
+    user_id: user?.user_id ?? "",
   });
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(isEditing);
-  const [isDragging, setIsDragging] = useState(false);
-  const [previewImages, setPreviewImages] = useState([]);
-  const fileInputRef = useRef(null);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState<boolean>(isEditing);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [previewImages, setPreviewImages] = useState<ImagePreview[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isEditing && id) {
@@ -48,16 +66,37 @@ const ProductForm = () => {
           name: product.name || "",
           description: product.description || "",
           category: product.category || "futbol",
-          price: product.price || "",
-          originalPrice: product.originalPrice || "",
-          stock: product.stock || "",
+          price: String(product.price ?? ""),
+          originalPrice: "",
+          stock: String(product.stock ?? ""),
           condition: product.condition || "new",
-          images: product.images || null,
+          images: null,
           brand: product.brand || "",
           temp: product.temp || "",
           size: product.size || "",
           color: product.color || "",
+          user_id: product.user_id || "",
         });
+
+        // Cargar imágenes existentes como previews
+        if (product.image) {
+          try {
+            const urls: string[] = JSON.parse(product.image as string);
+            const existingPreviews: ImagePreview[] = urls.map((url, i) => ({
+              file: new File([], `existing-${i}`),
+              id: `existing-${i}-${Date.now()}`,
+              preview: url,
+            }));
+            setPreviewImages(existingPreviews);
+          } catch {
+            // image is a single URL string
+            setPreviewImages([{
+              file: new File([], "existing-0"),
+              id: `existing-0-${Date.now()}`,
+              preview: product.image as string,
+            }]);
+          }
+        }
       }
       setLoading(false);
     }
@@ -78,14 +117,14 @@ const ProductForm = () => {
     { value: "used", label: "Pre-loved" },
   ];
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    if (errors[name]) {
+    if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
@@ -93,8 +132,8 @@ const ProductForm = () => {
     }
   };
   
-  const processFiles = (files) => {
-    const validFiles = [];
+  const processFiles = (files: File[]) => {
+    const validFiles: ImagePreview[] = [];
     const maxFiles = 3;
     const currentCount = previewImages.length;
 
@@ -146,37 +185,40 @@ const ProductForm = () => {
     }
 
     if (validFiles.length > 0) {
-      setPreviewImages((prev) => [...prev, ...validFiles]);
-      setFormData((prev) => ({ ...prev, images: validFiles }));
+      setPreviewImages((prev) => {
+        const accumulated = [...prev, ...validFiles];
+        setFormData((prevForm) => ({ ...prevForm, images: accumulated }));
+        return accumulated;
+      });
     }
   };
 
-  const handleImageFile = (e) => {
+  const handleImageFile = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
     processFiles(files);
   };
 
-  const handleDragEnter = (e) => {
+  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (e) => {
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.currentTarget.contains(e.relatedTarget)) return;
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
     setIsDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -185,11 +227,12 @@ const ProductForm = () => {
     processFiles(files);
   };
 
-  const removeImage = (imageId) => {
+  const removeImage = (imageId: string) => {
     setPreviewImages((prev) => {
       const updated = prev.filter((img) => img.id !== imageId);
       const removed = prev.find((img) => img.id === imageId);
       if (removed) URL.revokeObjectURL(removed.preview);
+      setFormData((prevForm) => ({ ...prevForm, images: updated.length > 0 ? updated : null }));
       return updated;
     });
   };
@@ -198,8 +241,8 @@ const ProductForm = () => {
     fileInputRef.current?.click();
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): FormErrors => {
+    const newErrors: FormErrors = {};
 
     if (!formData.name || !formData.name.trim()) {
       newErrors.name = "El nombre del producto es requerido";
@@ -228,21 +271,18 @@ const ProductForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
-      // Hay errores de validación
       setErrors(validationErrors);
       return;
     }
 
-    // PUT al backend si se está editando 🐶
-    if (isEditing) {
-      await updateProduct(formData);
+    if (isEditing && id) {
+      await updateProduct(id, formData);
     } else {
       await createNewProduct(formData);
-      navigate("/products");
     }
 
     navigate("/seller/products");
@@ -293,7 +333,7 @@ const ProductForm = () => {
                 placeholder="Describe el producto en detalle..."
                 value={formData.description}
                 onChange={handleChange}
-                rows="3"
+                rows={3}
                 className={`w-full px-4 py-3 border border-[#E0D6CC] bg-white font-sans-elegant text-[#2C2420] focus:border-[#2C2420] focus:ring-1 focus:ring-[#2C2420] outline-none transition-all duration-200 text-sm ${
                   errors.description ? "border-[#2C2420]" : ""
                 }`}
@@ -385,6 +425,7 @@ const ProductForm = () => {
                 placeholder="Ej: Zara, H&M"
                 value={formData.brand}
                 onChange={handleChange}
+                error={errors.brand}
               />
 
               <Input
@@ -393,6 +434,7 @@ const ProductForm = () => {
                 placeholder="Ej: Primavera 2025"
                 value={formData.temp}
                 onChange={handleChange}
+                error={errors.temp}
               />
 
               <Input
@@ -401,6 +443,7 @@ const ProductForm = () => {
                 placeholder="Ej: XS, S, M, L, XL (No en números)"
                 value={formData.size}
                 onChange={handleChange}
+                error={errors.size}
                 required
               />
 
@@ -410,6 +453,7 @@ const ProductForm = () => {
                 placeholder="Ej: Negro, Crema, Beige"
                 value={formData.color}
                 onChange={handleChange}
+                error={errors.color}
               />
             </div>
           </div>
