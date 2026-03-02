@@ -163,7 +163,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       await fetch(`${BACK_URL}/user/logout`, {
-        method: "GET",
+        method: "POST",
         credentials: "include",
       });
     } finally {
