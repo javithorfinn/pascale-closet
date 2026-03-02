@@ -86,7 +86,6 @@ const ProductForm = () => {
       ...prev,
       [name]: value,
     }));
-    // Limpiar error del campo cuando empieza a escribir
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
