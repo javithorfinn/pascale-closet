@@ -55,7 +55,7 @@ export const AllProducts = () => {
 
   // Filtrado usando la columna `category` del producto
   const filtered = activeSlug
-    ? products.filter((product) => activeSlug.includes(product.category))
+    ? products.filter((product) => activeSlug.includes(product.category!))
     : products;
 
   // Paginación
@@ -131,8 +131,10 @@ export const AllProducts = () => {
           </div>
         ) : (
           <div className="space-y-1">
-            {paginatedProducts.map((product) => (
-              <div
+            {paginatedProducts.map((product) => {
+              const images = JSON.parse(product.image || "[]");
+              return (
+                <div
                 key={product.id}
                 className="flex bg-white max-w-2xl w-full mx-auto border border-[#E0D6CC] hover:border-zinc-400 transition-all duration-300"
               >
@@ -142,7 +144,7 @@ export const AllProducts = () => {
                 >
                   {product.image ? (
                     <img
-                      src={product.image}
+                      src={images[0]}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -151,11 +153,7 @@ export const AllProducts = () => {
                       <Shirt className="w-16 h-16" />
                     </div>
                   )}
-                  {product.originalPrice && (
-                    <span className="absolute top-2 left-2 bg-[#2C2420] text-white text-[9px] px-2 py-1 font-sans-elegant uppercase tracking-wider">
-                      Oferta
-                    </span>
-                  )}
+        
                 </Link>
                 <div className="flex-1 xl:flex flex-col justify-between p-6">
                   <div>
@@ -170,11 +168,6 @@ export const AllProducts = () => {
                       </p>
                     )}
                     <div className="flex items-baseline gap-3 mb-4">
-                      {product.originalPrice && (
-                        <span className="text-sm text-[#999] line-through font-sans-elegant">
-                          ${product.originalPrice}
-                        </span>
-                      )}
                       <span className="text-xl font-sans-elegant text-[#2C2420]">
                         ${product.price}
                       </span>
@@ -189,7 +182,8 @@ export const AllProducts = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
