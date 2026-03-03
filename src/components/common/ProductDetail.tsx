@@ -496,7 +496,7 @@ const ProductDetail = () => {
                       />
                     </picture>
 
-                    <div className="mt-4 rounded-md border border-[#E0D6CC] bg-white p-4 text-sm text-gray-700">
+                    <div className="mt-2 rounded-md border border-[#E0D6CC] bg-white p-4 text-sm text-gray-700">
                       <span className="flex items-center gap-1 font-semibold text-gray-900">
                         <TriangleAlert size={20} className="text-[#E0D6CC]" />{" "}
                         Aclaración importante
