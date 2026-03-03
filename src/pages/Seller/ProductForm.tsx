@@ -5,6 +5,7 @@ import { useProducts, type ImagePreview } from "../../contexts/ProductContext";
 import { Loader } from "../../components/common/Loader";
 import { showDialog } from "../../components/common/Dialog";
 import { useAuth } from "../../contexts/AuthContext";
+import { ImageIcon } from "lucide-react";
 
 interface ProductFormData {
   name: string;
@@ -480,13 +481,6 @@ const ProductForm = () => {
               {isDragging && (
                 <div className="absolute inset-0 flex items-center justify-center bg-[#F5F0EB]">
                   <div className="text-center">
-                    <img
-                      src="/assets/Star-ia.gif"
-                      className="flex mx-auto my-4"
-                      width={90}
-                      height={60}
-                      alt="Star gif"
-                    />
                     <p className="text-[#2C2420] font-sans-elegant font-medium">
                       Suelta las imágenes aquí
                     </p>

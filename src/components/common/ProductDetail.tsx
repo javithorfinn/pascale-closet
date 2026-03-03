@@ -25,6 +25,7 @@ import { HeartCrack } from "lucide-react";
 import { ShoppingBag } from "lucide-react";
 import { Tag } from "lucide-react";
 import { colorDetect } from "../../utils/colorDetect";
+import Button from "./Button";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -183,6 +184,8 @@ const ProductDetail = () => {
       </div>
     );
   };
+
+  const cleanRecentlyProduct = () => localStorage.removeItem("recentlyViewed");
 
   if (loading) {
     return (
@@ -752,9 +755,14 @@ const ProductDetail = () => {
       {recentlyViewed.length > 0 && (
         <div className="border-t border-[#E0D6CC] bg-[#F5F0EB]">
           <div className="max-w-7xl mx-auto px-4 py-12">
-            <h2 className="text-xl font-sans-elegant uppercase tracking-wider text-[#2C2420] text-center mb-8">
-              Vistos recientemente
-            </h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-sans-elegant uppercase tracking-wider text-[#2C2420] text-center mb-8">
+                Vistos recientemente
+              </h2>
+              <Button variant="outline" onClick={cleanRecentlyProduct}>
+                Borrar Productos Vistos
+              </Button>
+            </div>
             <div className="relative">
               <Swiper
                 onSwiper={setSwiperRef}

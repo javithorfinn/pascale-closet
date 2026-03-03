@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useOrder } from "../../contexts/OrderContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { formatDate } from "../../utils/formatDate";
 import {
   Package,
@@ -12,6 +13,7 @@ import {
 
 const OrderHistory = () => {
   const { orders } = useOrder();
+  const { user } = useAuth();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,16 +74,20 @@ const OrderHistory = () => {
               <Package size={64} className="text-[#7A6B5A]" />
             </div>
             <h2 className="text-xl font-sans-elegant uppercase tracking-wider text-[#2C2420] mb-4">
-              No tienes pedidos aún
+              Aún no tienes pedidos
             </h2>
-            <p className="text-sm text-[#7A6B5A] font-sans-elegant mb-8">
-              ¡Explora nuestros productos y realiza tu primera compra!
-            </p>
-            <Link to="/">
-              <button className="px-8 py-4 bg-[#2C2420] text-white font-sans-elegant text-xs tracking-[0.2em] uppercase hover:bg-[#333333] transition-all duration-300">
-                Ir a la tienda
-              </button>
-            </Link>
+            {user?.role !== "seller" && (
+              <>
+                <p className="text-sm text-[#7A6B5A] font-sans-elegant mb-8">
+                  ¡Explora nuestros productos y realiza tu primera compra!
+                </p>
+                <Link to="/">
+                  <button className="px-8 py-4 bg-[#2C2420] text-white font-sans-elegant text-xs tracking-[0.2em] uppercase hover:bg-[#333333] transition-all duration-300">
+                    Ir a la tienda
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
