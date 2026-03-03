@@ -394,7 +394,7 @@ export const UserProfile = () => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
-    } 
+    }
   };
 
   return (
@@ -483,11 +483,10 @@ export const UserProfile = () => {
             <div className="flex gap-3 mb-6 shrink-0">
               <button
                 onClick={handleEdit}
-                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-sans-elegant tracking-[0.1em] uppercase transition-all duration-300 ${
-                  isEditing
+                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-sans-elegant tracking-[0.1em] uppercase transition-all duration-300 ${isEditing
                     ? "bg-[#2C2420] text-white ring-2 ring-[#2C2420] ring-offset-2"
                     : "bg-white border border-[#E0D6CC] text-[#2C2420] hover:bg-[#FAF8F5] hover:border-[#8B7355]"
-                }`}
+                  }`}
               >
                 <Edit3 size={14} />
                 {isEditing ? "Edición Activa" : "Editar Perfil"}
@@ -496,64 +495,66 @@ export const UserProfile = () => {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex border-t border-[#E0D6CC] w-180 xl:w-full pt-1 xl:justify-between">
-            <div>
-              <button
-                onClick={() => setIsSelectedItem("usuario")}
-                className={`${isSelectedItem === "usuario" ? "border-t-2 bg-[#F5F0EB]" : ""} w-32 py-4 px-1 text-xs font-sans-elegant uppercase tracking-wider text-[#2C2420] border-[#8B7355] -mt-1.5 transition hover:border-[#E0D6CC]`}
-              >
-                Usuario
-              </button>
-              <button
-                onClick={() => setIsSelectedItem("información")}
-                className={`${isSelectedItem === "información" ? "border-t-2 bg-[#F5F0EB]" : ""} w-32 py-4 px-1 text-xs font-sans-elegant uppercase tracking-wider text-[#2C2420] border-[#8B7355] -mt-1.5 transition hover:border-[#E0D6CC]`}
-              >
-                Información
-              </button>
-              {user.role === "buyer" && (
-                <a
-                  href="#favorites"
-                  className="py-4 px-1 w-32 text-xs font-sans-elegant font-medium uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition border-t-2 border-transparent hover:border-[#E0D6CC] -mt-1.5"
+          <section className="overflow-x-scroll md:overflow-x-auto">
+            <div className="flex border-t border-[#E0D6CC] w-180 xl:w-full pt-1 xl:justify-between">
+              <div>
+                <button
+                  onClick={() => setIsSelectedItem("usuario")}
+                  className={`${isSelectedItem === "usuario" ? "border-t-2 bg-[#F5F0EB]" : ""} w-32 py-4 px-1 text-xs font-sans-elegant uppercase tracking-wider text-[#2C2420] border-[#8B7355] -mt-1.5 transition hover:border-[#E0D6CC]`}
                 >
-                  Favoritos ({favorites?.length || 0})
-                </a>
+                  Usuario
+                </button>
+                <button
+                  onClick={() => setIsSelectedItem("información")}
+                  className={`${isSelectedItem === "información" ? "border-t-2 bg-[#F5F0EB]" : ""} w-32 py-4 px-1 text-xs font-sans-elegant uppercase tracking-wider text-[#2C2420] border-[#8B7355] -mt-1.5 transition hover:border-[#E0D6CC]`}
+                >
+                  Información
+                </button>
+                {user.role === "buyer" && (
+                  <a
+                    href="#favorites"
+                    className="py-4 px-1 w-32 text-xs font-sans-elegant font-medium uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition border-t-2 border-transparent hover:border-[#E0D6CC] -mt-1.5"
+                  >
+                    Favoritos ({favorites?.length || 0})
+                  </a>
+                )}
+              </div>
+
+              {user.role === "seller" && (
+                <div>
+                  <button
+                    onClick={() => {
+                      setSelectedEdition("hero");
+                      goTo("hero");
+                    }}
+                    className={`${selectedEdition === "hero" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
+                  >
+                    Portada
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedEdition("footer");
+                      goTo("footer");
+                    }}
+                    className={`${selectedEdition === "footer" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
+                  >
+                    Pié de Página
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedEdition("discount");
+                      goTo("discount");
+                    }}
+                    className={`${selectedEdition === "discount" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
+                  >
+                    Descuento
+                  </button>
+                </div>
               )}
             </div>
-
-            {user.role === "seller" && (
-              <div>
-              <button
-                onClick={() => {
-                  setSelectedEdition("hero");
-                  goTo("hero");
-                }}
-                className={`${selectedEdition === "hero" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
-              >
-                Portada
-              </button>
-
-              <button
-                onClick={() => {
-                  setSelectedEdition("footer");
-                  goTo("footer");
-                }}
-                className={`${selectedEdition === "footer" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
-              >
-                Pié de Página
-              </button>
-
-              <button
-                onClick={() => {
-                  setSelectedEdition("discount");
-                  goTo("discount");
-                }}
-                className={`${selectedEdition === "discount" ? "border-t-2 border-[#8B7355] bg-[#F5F0EB]" : ""} py-4 px-1 w-32 text-xs font-sans-elegant uppercase tracking-wider text-[#7A6B5A] hover:text-[#2C2420] transition hover:border-[#E0D6CC] -mt-1.5`}
-              >
-                Descuento
-              </button>
-            </div>
-            )}
-          </div>
+          </section>
         </div>
       </div>
 
