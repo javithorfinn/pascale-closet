@@ -226,7 +226,7 @@ const ProductDetail = () => {
       <section className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
         <button
           onClick={() => setOpenDialog(false)}
-          className="absolute top-4 right-4 z-[999] w-10 h-10 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors rounded-full"
+          className="absolute top-4 right-4 z-[999] w-10 h-10 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
         >
           <X className="w-6 h-6 text-white" />
         </button>
