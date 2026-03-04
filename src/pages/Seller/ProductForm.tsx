@@ -5,6 +5,7 @@ import { useProducts, type ImagePreview } from "../../contexts/ProductContext";
 import { Loader } from "../../components/common/Loader";
 import { showDialog } from "../../components/common/Dialog";
 import { useAuth } from "../../contexts/AuthContext";
+import { processImagesForUpload } from "../../utils/imageConverter";
 
 interface ProductFormData {
   name: string;
@@ -131,14 +132,17 @@ const ProductForm = () => {
       }));
     }
   };
-  
-  const processFiles = (files: File[]) => {
+
+  const processFiles = async (files: File[]) => {
     const validFiles: ImagePreview[] = [];
     const maxFiles = 3;
     const currentCount = previewImages.length;
     const allowedExtensions = /\.(jpe?g|png|gif|webp|bmp|heic|heif|avif)$/i;
 
-    for (const file of files) {
+    // Convertir archivos HEIC a JPEG antes de procesar (iPhone 15 usa HEIC por defecto)
+    const convertedFiles = await processImagesForUpload(files);
+
+    for (const file of convertedFiles) {
       if (validFiles.length + currentCount >= maxFiles) {
         showDialog({
           content: (
@@ -169,12 +173,12 @@ const ProductForm = () => {
         continue;
       }
 
-      if (file.size > 10 * 1024 * 1024) {
+      if (file.size > 15 * 1024 * 1024) {
         showDialog({
           content: (
             <div className="p-5">
               <p className="font-sans-elegant text-[#2C2420]">
-                "{file.name}" supera el límite de 10MB.
+                "{file.name}" supera el límite de 15MB.
               </p>
             </div>
           ),
@@ -198,10 +202,10 @@ const ProductForm = () => {
     }
   };
 
-  const handleImageFile = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
-    processFiles(files);
+    await processFiles(files);
   };
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
@@ -223,13 +227,13 @@ const ProductForm = () => {
     setIsDragging(false);
   };
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    processFiles(files);
+    await processFiles(files);
   };
 
   const removeImage = (imageId: string) => {
@@ -339,9 +343,8 @@ const ProductForm = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows={3}
-                className={`w-full px-4 py-3 border border-[#E0D6CC] bg-white font-sans-elegant text-[#2C2420] focus:border-[#2C2420] focus:ring-1 focus:ring-[#2C2420] outline-none transition-all duration-200 text-sm ${
-                  errors.description ? "border-[#2C2420]" : ""
-                }`}
+                className={`w-full px-4 py-3 border border-[#E0D6CC] bg-white font-sans-elegant text-[#2C2420] focus:border-[#2C2420] focus:ring-1 focus:ring-[#2C2420] outline-none transition-all duration-200 text-sm ${errors.description ? "border-[#2C2420]" : ""
+                  }`}
               />
               {errors.description && (
                 <p className="text-[#2C2420] text-xs mt-1 font-sans-elegant">
@@ -476,11 +479,10 @@ const ProductForm = () => {
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={handleDropZoneClick}
-              className={`relative border-2 border-dashed p-8 text-center cursor-pointer transition-all duration-300 ${
-                isDragging
+              className={`relative border-2 border-dashed p-8 text-center cursor-pointer transition-all duration-300 ${isDragging
                   ? "border-[#2C2420] bg-[#F5F0EB] scale-[1.02]"
                   : "border-[#E0D6CC] bg-[#F5F0EB] hover:border-[#2C2420]"
-              }`}
+                }`}
             >
               {isDragging && (
                 <div className="absolute inset-0 flex items-center justify-center bg-[#F5F0EB]">
