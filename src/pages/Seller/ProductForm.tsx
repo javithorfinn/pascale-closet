@@ -5,7 +5,6 @@ import { useProducts, type ImagePreview } from "../../contexts/ProductContext";
 import { Loader } from "../../components/common/Loader";
 import { showDialog } from "../../components/common/Dialog";
 import { useAuth } from "../../contexts/AuthContext";
-import { ImageIcon } from "lucide-react";
 
 interface ProductFormData {
   name: string;
@@ -71,7 +70,7 @@ const ProductForm = () => {
           originalPrice: "",
           stock: String(product.stock ?? ""),
           condition: product.condition || "new",
-          images: null,
+          images: [{ file: new File(JSON.parse(product.image || "[]"), ""), id: "", preview: "" }],
           brand: product.brand || "",
           temp: product.temp || "",
           size: product.size || "",
@@ -137,6 +136,7 @@ const ProductForm = () => {
     const validFiles: ImagePreview[] = [];
     const maxFiles = 3;
     const currentCount = previewImages.length;
+    const allowedExtensions = /\.(jpe?g|png|gif|webp|bmp|heic|heif|avif)$/i;
 
     for (const file of files) {
       if (validFiles.length + currentCount >= maxFiles) {
@@ -152,7 +152,11 @@ const ProductForm = () => {
         break;
       }
 
-      if (!file.type.startsWith("image/")) {
+      // Check by MIME type or by file extension (mobile browsers may not set MIME correctly)
+      const isImageByType = file.type.startsWith("image/");
+      const isImageByExt = allowedExtensions.test(file.name);
+
+      if (!isImageByType && !isImageByExt) {
         showDialog({
           content: (
             <div className="p-5">
@@ -528,7 +532,7 @@ const ProductForm = () => {
                 onChange={handleImageFile}
                 className="hidden"
                 multiple
-                accept="image/*"
+                accept="image/*,.heic,.heif"
               />
             </div>
 
@@ -542,10 +546,13 @@ const ProductForm = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      previewImages.forEach((img) =>
-                        URL.revokeObjectURL(img.preview),
-                      );
+                      previewImages.forEach((img) => {
+                        if (img.preview && !img.preview.startsWith("http")) {
+                          URL.revokeObjectURL(img.preview);
+                        }
+                      });
                       setPreviewImages([]);
+                      setFormData((prev) => ({ ...prev, images: null }));
                     }}
                     className="text-xs text-[#2C2420] font-sans-elegant hover:underline"
                   >

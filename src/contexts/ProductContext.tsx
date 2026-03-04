@@ -262,10 +262,30 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       formData.append("color", updatedProduct.color);
       formData.append("category", updatedProduct.category);
 
+      // Separar las imagenes existentes y subir si hay ya archivos
+      const existingUrls: string[] = [];
+      const newFiles: File[] = [];
+
       if (updatedProduct.images && updatedProduct.images.length > 0) {
         for (const img of updatedProduct.images) {
-          formData.append("images", img.file);
+          if (img.file.size > 0) {
+            // Una imagen real nueva
+            newFiles.push(img.file);
+          } else if (img.preview && img.preview.startsWith("http")) {
+            // Esta es una imagen que ya existe en el server
+            existingUrls.push(img.preview);
+          }
         }
+      }
+
+      // Unicamente actualizar si hay imágenes nuevas
+      for (const file of newFiles) {
+        formData.append("images", file);
+      }
+
+      // Enviar las URL al backend 
+      if (existingUrls.length > 0) {
+        formData.append("existing_images", JSON.stringify(existingUrls));
       }
 
       const response = await fetch(
