@@ -55,6 +55,11 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
       name: "ACCESORIOS",
       url: "products/category/accesorios",
     },
+    {
+      slug: "otros",
+      name: "OTROS",
+      url: "products/category/otros",
+    }
   ];
 
   const activeCategory = categories.find(

@@ -231,7 +231,7 @@ export const AllProducts = () => {
         )}
       </div>
 
-      {/* Features Bar - Estilo Kadenkas */}
+      {/* Features Bar */}
       <div className="border-t border-[#E0D6CC] bg-white py-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

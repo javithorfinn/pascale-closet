@@ -334,6 +334,21 @@ const ProductDetail = () => {
                   )}
                 </button>
               </div>
+              {images.length > 2 && (
+                <div className="absolute bottom-4 left-18 flex gap-2">
+                <button className="w-12 h-12 bg-white border-2 border-[#2C2420] overflow-hidden">
+                  {product.image ? (
+                    <img
+                      src={images[1]}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#F5F0EB]"></div>
+                  )}
+                </button>
+              </div>
+              )}
             </div>
           </div>
 

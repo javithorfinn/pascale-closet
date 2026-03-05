@@ -88,15 +88,6 @@ export const Checkout = () => {
     return newErrors;
   };
 
-  const validatePayment = (): FormErrors => {
-    const newErrors: FormErrors = {};
-    if (!formData.cardNumber.trim()) newErrors.cardNumber = "Requerido";
-    if (!formData.cardName.trim()) newErrors.cardName = "Requerido";
-    if (!formData.expiryDate.trim()) newErrors.expiryDate = "Requerido";
-    if (!formData.cvv.trim()) newErrors.cvv = "Requerido";
-    return newErrors;
-  };
-
   const handleNextStep = () => {
     if (step === 1) {
       const newErrors = validateShipping();
@@ -109,24 +100,7 @@ export const Checkout = () => {
       if (!formData.address || !formData.phone || !formData.state) {
         updatePartialInformation(formData);
       }
-    } else if (step === 2) {
-      const newErrors = validatePayment();
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-      setStep(3);
     }
-  };
-
-  const handlePlaceOrder = () => {
-    clearCart();
-    navigate("/order-confirmation", {
-      state: {
-        orderNumber: Math.floor(Math.random() * 1000000),
-        total: (getCartTotal() * 1.1).toFixed(2),
-      },
-    });
   };
 
   if (cartItems.length === 0) {
@@ -150,8 +124,8 @@ export const Checkout = () => {
             >
               <div
                 className={`w-10 h-10 mx-auto rounded-full border ${step >= 1
-                    ? "bg-[#2C2420] border-[#2C2420] text-white"
-                    : "border-[#E0D6CC] text-[#7A6B5A]"
+                  ? "bg-[#2C2420] border-[#2C2420] text-white"
+                  : "border-[#E0D6CC] text-[#7A6B5A]"
                   } flex items-center justify-center font-sans-elegant text-sm mb-2`}
               >
                 1
@@ -170,14 +144,14 @@ export const Checkout = () => {
             >
               <div
                 className={`w-10 h-10 mx-auto rounded-full border ${step >= 2
-                    ? "bg-[#2C2420] border-[#2C2420] text-white"
-                    : "border-[#E0D6CC] text-[#7A6B5A]"
+                  ? "bg-[#2C2420] border-[#2C2420] text-white"
+                  : "border-[#E0D6CC] text-[#7A6B5A]"
                   } flex items-center justify-center font-sans-elegant text-sm mb-2`}
               >
                 2
               </div>
               <p className="text-xs font-sans-elegant uppercase tracking-wide">
-                Pago
+                Revisar
               </p>
             </div>
             <div
@@ -190,14 +164,14 @@ export const Checkout = () => {
             >
               <div
                 className={`w-10 h-10 mx-auto rounded-full border ${step >= 3
-                    ? "bg-[#2C2420] border-[#2C2420] text-white"
-                    : "border-[#E0D6CC] text-[#7A6B5A]"
+                  ? "bg-[#2C2420] border-[#2C2420] text-white"
+                  : "border-[#E0D6CC] text-[#7A6B5A]"
                   } flex items-center justify-center font-sans-elegant text-sm mb-2`}
               >
                 3
               </div>
               <p className="text-xs font-sans-elegant uppercase tracking-wide">
-                Revisar
+                Pago
               </p>
             </div>
           </div>
@@ -290,6 +264,7 @@ export const Checkout = () => {
                       onChange={handleChange}
                       disabled
                     />
+                    <small className="text-destructive">* Campos oblogatorios</small>
                   </div>
                   <Button
                     variant="primary"
@@ -297,13 +272,62 @@ export const Checkout = () => {
                     onClick={handleNextStep}
                     className="w-full mt-4"
                   >
-                    Continuar al Pago
+                    Revisar Datos
                   </Button>
                 </div>
               )}
 
-              {/* Step 2: Payment */}
+              {/* Step 2: Review */}
               {step === 2 && (
+                <div>
+                  <h2 className="text-sm font-sans-elegant uppercase tracking-wider text-[#2C2420] mb-6 pb-4 border-b border-[#E0D6CC]">
+                    Revisar Pedido
+                  </h2>
+                  <div className="space-y-4">
+                    <div className="border border-[#E0D6CC] p-5">
+                      <h3 className="font-sans-elegant text-xs uppercase tracking-wide text-[#2C2420] mb-3">
+                        Datos del Comprador
+                      </h3>
+                      <p className="text-sm text-[#7A6B5A] font-sans-elegant leading-relaxed whitespace-pre-wrap">
+                        <strong className="text-[#2C2420]">Nombre:</strong> {formData.firstName} {formData.lastName}
+                        <br />
+                        <strong className="text-[#2C2420]">Email:</strong> {formData.email}
+                        <br />
+                        <strong className="text-[#2C2420]">Teléfono:</strong> {formData.phone}
+                      </p>
+                    </div>
+                    <div className="border border-[#E0D6CC] p-5">
+                      <h3 className="font-sans-elegant text-xs uppercase tracking-wide text-[#2C2420] mb-3">
+                        Dirección de Envío
+                      </h3>
+                      <p className="text-sm text-[#7A6B5A] font-sans-elegant leading-relaxed whitespace-pre-wrap">
+                        {formData.address}
+                        <br />
+                        {formData.city}, {formData.state} {formData.zipCode}
+                        <br />
+                        {formData.country || "Chile"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 mt-8">
+                    <button
+                      onClick={() => setStep(1)}
+                      className="flex-1 py-4 border border-[#2C2420] text-[#2C2420] font-sans-elegant text-xs tracking-[0.15em] uppercase hover:bg-[#2C2420] hover:text-white transition-all duration-300"
+                    >
+                      Volver
+                    </button>
+                    <button
+                      onClick={() => setStep(3)}
+                      className="flex-1 py-4 bg-[#2C2420] text-white font-sans-elegant text-xs tracking-[0.15em] uppercase hover:bg-[#333333] transition-all duration-300"
+                    >
+                      Ir a Pagar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Payment */}
+              {step === 3 && (
                 <div>
                   <h2 className="text-sm font-sans-elegant uppercase tracking-wider text-[#2C2420] mb-6 pb-4 border-b border-[#E0D6CC]">
                     Método de Pago
@@ -322,17 +346,20 @@ export const Checkout = () => {
                         zipCode: formData.zipCode,
                         country: formData.country,
                       })}
-                      className="w-full py-2 text-black font-semibold font-sans-elegant text-xs tracking-[0.15em] uppercase border outline-border outline-offset-2 hover:bg-[#FFE600] hover:outline transition-all duration-300"
+                      className="w-full group relative overflow-x-hidden py-2 text-black font-semibold font-sans-elegant text-xs tracking-[0.15em] uppercase border hover:ring-4 hover:ring-primary/20 transition-all duration-300"
                       disabled={loadingPayment}
                     >
-                      {loadingPayment ? (
+                      <div className="absolute top-0 left-0 bg-[#2C2420]/50 blur-3xl w-full h-full -translate-x-[120%] group-hover:translate-x-[120%] transition-transform duration-800"></div>
+
+                      <div className="z-999">
+                        {loadingPayment ? (
                         <span className="flex gap-2 items-center justify-center h-10">
                           <Loader2 className="animate-spin w-4 h-4" />{" "}
                           Procesando...
                         </span>
                       ) : (
                         <span className="flex gap-2 items-center justify-center">
-                          Continuar con
+                          Finalizar con
                           <img
                             src="/assets/Mercado_Pago_Logo.svg"
                             width={100}
@@ -340,62 +367,16 @@ export const Checkout = () => {
                           />
                         </span>
                       )}
+                      </div>
                     </button>
                   </div>
 
                   <div className="flex gap-4 mt-6">
                     <button
-                      onClick={() => setStep(1)}
-                      className="flex-1 py-4 border bg-[#2C2420] border-[#2C2420] text-white font-sans-elegant text-xs tracking-[0.15em] uppercase hover:bg-[#2C2420] hover:text-white transition-all duration-300"
-                    >
-                      Volver
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 3: Review */}
-              {step === 3 && (
-                <div>
-                  <h2 className="text-sm font-sans-elegant uppercase tracking-wider text-[#2C2420] mb-6 pb-4 border-b border-[#E0D6CC]">
-                    Revisar Pedido
-                  </h2>
-                  <div className="space-y-4">
-                    <div className="border border-[#E0D6CC] p-5">
-                      <h3 className="font-sans-elegant text-xs uppercase tracking-wide text-[#2C2420] mb-3">
-                        Dirección de Envío
-                      </h3>
-                      <p className="text-sm text-[#7A6B5A] font-sans-elegant leading-relaxed">
-                        {formData.firstName} {formData.lastName}
-                        <br />
-                        {formData.address}
-                        <br />
-                        {formData.city}, {formData.state} {formData.zipCode}
-                        <br />
-                        {formData.country}
-                      </p>
-                    </div>
-                    <div className="border border-[#E0D6CC] p-5">
-                      <h3 className="font-sans-elegant text-xs uppercase tracking-wide text-[#2C2420] mb-3">
-                        Método de Pago
-                      </h3>
-                      <p className="text-sm text-[#7A6B5A] font-sans-elegant">
-                        Tarjeta terminada en {formData.cardNumber.slice(-4)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 mt-8">
-                    <button
                       onClick={() => setStep(2)}
                       className="flex-1 py-4 border border-[#2C2420] text-[#2C2420] font-sans-elegant text-xs tracking-[0.15em] uppercase hover:bg-[#2C2420] hover:text-white transition-all duration-300"
                     >
                       Volver
-                    </button>
-                    <button
-                      onClick={handlePlaceOrder}
-                      className="flex-1 py-4 bg-[#2C2420] text-white font-sans-elegant text-xs tracking-[0.15em] uppercase hover:bg-[#333333] transition-all duration-300"
-                    >
-                      Confirmar Pedido
                     </button>
                   </div>
                 </div>
@@ -470,7 +451,7 @@ export const Checkout = () => {
                     </span>
                     <span className="font-sans-elegant text-xl text-[#2C2420]">
                       $
-                      {Number(discountContent?.discount) > 0
+                      {discountContent?.discount_is_active && Number(discountContent?.discount) > 0
                         ? Math.floor(
                           getCartTotal() -
                           (getCartTotal() *
