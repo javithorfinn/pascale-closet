@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-import { Loader2, TruckElectricIcon, Tag } from "lucide-react";
+import { Loader2, TruckElectricIcon, Tag, ShieldCheckIcon } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUser } from "../../contexts/UserContext";
+import { CreditCardsBgTransparent } from "../../components/common/CreditCards";
 
 interface CheckoutFormData {
   firstName: string;
@@ -462,6 +463,11 @@ export const Checkout = () => {
                     </span>
                   </div>
                 </div>
+                <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                  <ShieldCheckIcon size={20} />
+                  <span>Compra protegida SSL</span>
+                </div>
+                <CreditCardsBgTransparent />
               </div>
             </div>
           </div>
