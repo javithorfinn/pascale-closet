@@ -26,6 +26,8 @@ import ComingSoonPage from "./pages/Public/404";
 import Cart from "./pages/Buyer/Cart";
 import { Checkout } from "./pages/Buyer/Checkout";
 import { OrderConfirmation } from "./pages/Buyer/OrderConfirmation";
+import { PaymentFailure } from "./pages/Buyer/PaymentFailure";
+import { PaymentPending } from "./pages/Buyer/PaymentPending";
 import OrderHistory from "./pages/Buyer/OrderHistory";
 import OrderDetail from "./pages/Buyer/OrderDetail";
 
@@ -45,112 +47,114 @@ function App() {
       <ScrollToTop />
       <Layout>
         <Routes>
-                {/* Rutas Públicas */}
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/products" element={<Products />} />
-                <Route
-                  path="/products/category/:categorySlug"
-                  element={<AllProducts />}
-                />
-                <Route path="/search" element={<SearchResults />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/sellerInfo" element={<SellerInfo />} />
-                <Route path="/legal" element={<LegalPage />} />
-                <Route path="/404" element={<ComingSoonPage />} />
+          {/* Rutas Públicas */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/products" element={<Products />} />
+          <Route
+            path="/products/category/:categorySlug"
+            element={<AllProducts />}
+          />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/sellerInfo" element={<SellerInfo />} />
+          <Route path="/legal" element={<LegalPage />} />
+          <Route path="/404" element={<ComingSoonPage />} />
 
-                {/* Ruata Perfil Usuario */}
-                <Route
-                  path="/user/profile"
-                  element={
-                    <ProtectedRoute>
-                      <UserProfile />
-                    </ProtectedRoute>
-                  }
-                />
+          {/* Ruata Perfil Usuario */}
+          <Route
+            path="/user/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
 
-                {/* Rutas Comprador */}
-                <Route path="/cart" element={<Cart />} />
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <Checkout />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/order-confirmation/:id"
-                  element={<OrderConfirmation />}
-                />
-                <Route
-                  path="/buyer/orders"
-                  element={
-                    <ProtectedRoute allowedRole="buyer">
-                      <OrderHistory />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/buyer/orders/:id"
-                  element={
-                    <ProtectedRoute allowedRole="buyer">
-                      <OrderDetail />
-                    </ProtectedRoute>
-                  }
-                />
+          {/* Rutas Comprador */}
+          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order-confirmation/:id"
+            element={<OrderConfirmation />}
+          />
+          <Route path="/failure" element={<PaymentFailure />} />
+          <Route path="/pending" element={<PaymentPending />} />
+          <Route
+            path="/buyer/orders"
+            element={
+              <ProtectedRoute allowedRole="buyer">
+                <OrderHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buyer/orders/:id"
+            element={
+              <ProtectedRoute allowedRole="buyer">
+                <OrderDetail />
+              </ProtectedRoute>
+            }
+          />
 
-                {/* Rutas vendedor */}
-                <Route
-                  path="/seller/dashboard"
-                  element={
-                    <ProtectedRoute allowedRole="seller">
-                      <SellerDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/seller/products"
-                  element={
-                    <ProtectedRoute allowedRole="seller">
-                      <ProductManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/seller/products/new"
-                  element={
-                    <ProtectedRoute allowedRole="seller">
-                      <ProductForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/seller/products/edit/:id"
-                  element={
-                    <ProtectedRoute allowedRole="seller">
-                      <ProductForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/seller/orders"
-                  element={
-                    <ProtectedRoute allowedRole="seller">
-                      <OrderHistory />
-                    </ProtectedRoute>
-                  }
-                />
+          {/* Rutas vendedor */}
+          <Route
+            path="/seller/dashboard"
+            element={
+              <ProtectedRoute allowedRole="seller">
+                <SellerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/products"
+            element={
+              <ProtectedRoute allowedRole="seller">
+                <ProductManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/products/new"
+            element={
+              <ProtectedRoute allowedRole="seller">
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/products/edit/:id"
+            element={
+              <ProtectedRoute allowedRole="seller">
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/orders"
+            element={
+              <ProtectedRoute allowedRole="seller">
+                <OrderHistory />
+              </ProtectedRoute>
+            }
+          />
 
-                {/* Cachear todos - redirección al inicio */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Layout>
+          {/* Cachear todos - redirección al inicio */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }
