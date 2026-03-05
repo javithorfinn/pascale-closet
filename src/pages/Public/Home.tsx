@@ -84,11 +84,11 @@ export const Home = () => {
       <section className="relative h-[70vh] md:h-[85vh] overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={heroData?.hero_url_image}
+            src={heroData?.hero_url_image || "/assets/pascale_logo.png"}
             alt="Pascale Closet Collection"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-black/25"></div>
         </div>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
           <p className="text-white/90 font-sans-elegant text-xs tracking-[0.4em] uppercase mb-4">

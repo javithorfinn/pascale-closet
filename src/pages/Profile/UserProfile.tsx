@@ -585,7 +585,7 @@ export const UserProfile = () => {
                         Miembro desde
                       </p>
                       <p className="text-[#2C2420]">
-                        {formatDate(user.created_at)}
+                        {formatDate(user.created_at as string)}
                       </p>
                     </div>
                   </div>
@@ -599,7 +599,7 @@ export const UserProfile = () => {
                         Actualizado el
                       </p>
                       <p className="text-[#2C2420]">
-                        {formatDate(user.updated_at, true)}
+                        {formatDate(user.updated_at as string, true)}
                       </p>
                     </div>
                   </div>
@@ -914,7 +914,7 @@ export const UserProfile = () => {
                       Personalizar Portada
                     </h3>
                     <small className="text-yellow-800 rounded text-[10px] md:text-[12px]">
-                      Actualizada el {formatDate(heroData.hero_updated_at, true)}
+                      Actualizada el {formatDate(heroData.hero_updated_at as string, true)}
                     </small>
                   </div>
                   <div className="md:p-6">
@@ -941,7 +941,7 @@ export const UserProfile = () => {
                   </h3>
                   {footerData?.footer_updated_at && (
                     <small className="text-yellow-800 rounded text-[10px] md:text-[12px]">
-                      Actualizada el {formatDate(footerData.footer_updated_at, true)}
+                      Actualizada el {formatDate(footerData.footer_updated_at as string, true)}
                     </small>
                   )}
                 </div>
@@ -970,7 +970,7 @@ export const UserProfile = () => {
                   {discountFormData?.discount_updated_at && (
                     <small className="text-yellow-800 rounded text-[10px] md:text-[12px]">
                       Actualizada el{" "}
-                      {formatDate(discountFormData.discount_updated_at, true)}
+                      {formatDate(discountFormData.discount_updated_at as string, true)}
                     </small>
                   )}
                 </div>

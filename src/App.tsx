@@ -20,7 +20,6 @@ import { About } from "./pages/Public/AboutUs";
 import { Help } from "./pages/Public/Help";
 import SellerInfo from "./pages/Public/SellerInfo";
 import { LegalPage } from "./pages/Public/Legals";
-import ComingSoonPage from "./pages/Public/404";
 
 // Páginas comprador
 import Cart from "./pages/Buyer/Cart";
@@ -66,7 +65,6 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/sellerInfo" element={<SellerInfo />} />
           <Route path="/legal" element={<LegalPage />} />
-          <Route path="/404" element={<ComingSoonPage />} />
 
           {/* Ruata Perfil Usuario */}
           <Route

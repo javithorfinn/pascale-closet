@@ -247,7 +247,7 @@ const OrderDetail = () => {
                     Fecha de Creación
                   </p>
                   <p className="text-[#2C2420] font-sans-elegant mt-1">
-                    {formatDate(order.created_at)}
+                    {formatDate(order.created_at as string)}
                   </p>
                 </div>
               </div>
@@ -262,7 +262,7 @@ const OrderDetail = () => {
                     Última Actualización
                   </p>
                   <p className="text-[#2C2420] font-sans-elegant mt-1">
-                    {formatDate(order.updated_at)}
+                    {formatDate(order.updated_at as string)}
                   </p>
                 </div>
               </div>

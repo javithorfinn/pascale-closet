@@ -132,7 +132,7 @@ const OrderHistory = () => {
                           Fecha
                         </p>
                         <p className="text-[#2C2420] mt-1">
-                          {formatDate(order.created_at, true)}
+                          {formatDate(order.created_at as string, true)}
                         </p>
                       </div>
                       <div>

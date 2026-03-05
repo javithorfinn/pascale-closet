@@ -238,7 +238,7 @@ const SellerDashboard = () => {
                           ${Number(order.total).toLocaleString("es-AR")}
                         </p>
                         <p className="text-[10px] text-[#7A6B5A] font-sans-elegant">
-                          {formatDate(order.updated_at)}
+                          {formatDate(order.updated_at as string)}
                         </p>
                       </div>
                     </div>

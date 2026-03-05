@@ -13,7 +13,7 @@ interface LayoutProps {
  * @param {React.ReactNode} children - Contenido principal de la página
  * @returns {React.JSX.Element} Layout con estructura de 3 niveles (header, main, footer)
  */
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children }: LayoutProps): React.JSX.Element => {
   const { isAuthenticated, user, userRole, logout, isLoading } = useAuth();
 
   return (
@@ -27,7 +27,7 @@ export const Layout = ({ children }: LayoutProps) => {
       />
       <main className="flex-1">{children}</main>
       <Footer />
-      <WhatsAppButton url={"https://www.instagram.com/pascalecloset/"} />
+      <WhatsAppButton />
     </div>
   );
 };

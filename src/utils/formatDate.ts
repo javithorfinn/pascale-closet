@@ -1,4 +1,4 @@
-export const formatDate = (str, fullDate) => {
+export const formatDate = (str: Date | string, fullDate: boolean = false) => {
   return fullDate
     ? new Date(str).toLocaleDateString("es-AR", {
         year: "numeric",
