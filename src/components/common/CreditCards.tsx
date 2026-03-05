@@ -72,7 +72,7 @@ export const CreditCards = () => {
 
 export const CreditCardsBgTransparent = () => {
   return (
-    <div className="flex gap-2 items-center ml-1">
+    <div className="flex gap-2 items-center ml-1 grayscale-100">
       <svg
         role="img"
         viewBox="0 0 32 24"
