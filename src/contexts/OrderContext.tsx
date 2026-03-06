@@ -220,7 +220,11 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         ),
       });
 
-      setOrders([]);
+      // Actualizar el estado eliminando la orden
+      setOrders((prev) => prev.filter((prevOrder) => prevOrder.id !== id));
+      if (user?.role === "seller") {
+        setSellerOrders((prev) => prev.filter((prevOrder) => prevOrder.id !== id));
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error desconocido");
     }
