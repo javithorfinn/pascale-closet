@@ -274,7 +274,7 @@ export const Home = () => {
           {/* Flechas de navegación abajo a la derecha */}
           <div className="flex justify-between gap-2 mt-6">
             <Button onClick={() => window.open("https://www.instagram.com/pascalecloset", "_blank")} className="flex gap-1 items-center">
-              <Instagram />
+              <Instagram size={18} />
               sigue @pascalecloset
             </Button>
             <div className="flex items-center gap-2">
