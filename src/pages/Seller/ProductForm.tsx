@@ -5,7 +5,6 @@ import { useProducts, type ImagePreview } from "../../contexts/ProductContext";
 import { Loader } from "../../components/common/Loader";
 import { showDialog } from "../../components/common/Dialog";
 import { useAuth } from "../../contexts/AuthContext";
-import { processImagesForUpload } from "../../utils/imageConverter";
 
 interface ProductFormData {
   name: string;
@@ -139,10 +138,7 @@ const ProductForm = () => {
     const currentCount = previewImages.length;
     const allowedExtensions = /\.(jpe?g|png|gif|webp|bmp|heic|heif|avif)$/i;
 
-    // Convertir archivos HEIC a JPEG antes de procesar (iPhone 15 usa HEIC por defecto)
-    const convertedFiles = await processImagesForUpload(files);
-
-    for (const file of convertedFiles) {
+    for (const file of files) {
       if (validFiles.length + currentCount >= maxFiles) {
         showDialog({
           content: (
