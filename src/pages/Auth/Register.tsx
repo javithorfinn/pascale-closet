@@ -3,6 +3,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Input from "../../components/common/Input";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+
+const registerSchema = z.object({
+  name: z.string()
+    .min(1, "El nombre es requerido")
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(50, "El nombre no puede exceder 50 caracteres")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/, "El nombre solo puede contener letras"),
+  lastName: z.string()
+    .min(1, "El apellido es requerido")
+    .min(2, "El apellido debe tener al menos 2 caracteres")
+    .max(50, "El apellido no puede exceder 50 caracteres")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/, "El apellido solo puede contener letras"),
+  email: z.string()
+    .min(1, "El email es requerido")
+    .email("Ingresa un email válido")
+    .max(100, "El email no puede exceder 100 caracteres"),
+  password: z.string()
+    .min(1, "La contraseña es requerida")
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .max(100, "La contraseña no puede exceder 100 caracteres")
+    .regex(/[A-Z]/, "Debe contener al menos una letra mayúscula")
+    .regex(/[a-z]/, "Debe contener al menos una letra minúscula")
+    .regex(/[0-9]/, "Debe contener al menos un número"),
+  confirmPassword: z.string()
+    .min(1, "Debes confirmar la contraseña"),
+  role: z.enum(["buyer", "seller"]),
+  acceptTerms: z.literal(true, "Debes aceptar los términos y condiciones"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
+});
 
 export const Register = () => {
   const [formData, setFormData] = useState({
@@ -33,37 +65,22 @@ export const Register = () => {
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "El nombre es requerido";
+    try {
+      registerSchema.parse(formData);
+      return {};
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.issues.forEach((err) => {
+          const field = err.path[0] as string;
+          if (field && !newErrors[field]) {
+            newErrors[field] = err.message;
+          }
+        });
+        return newErrors;
+      }
+      return {};
     }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "El apellido es requerido";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "El email es requerido";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email inválido";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
-    }
-
-    if (!formData.acceptTerms) {
-      newErrors.acceptTerms = "Debes aceptar los términos y condiciones";
-    }
-
-    return newErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -166,7 +183,7 @@ export const Register = () => {
               placeholder="••••••••"
               value={formData.confirmPassword || ""}
               onChange={handleChange}
-              error={errors.password}
+              error={errors.confirmPassword}
               required
             />
 
@@ -187,19 +204,6 @@ export const Register = () => {
                   />
                   <span className="text-sm font-sans-elegant text-[#2C2420]">
                     👗 Compradora - Quiero comprar prendas
-                  </span>
-                </label>
-                <label className="flex items-center p-3 border border-[#E0D6CC] hover:border-[#2C2420] cursor-pointer transition-colors duration-200">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="seller"
-                    checked={formData.role === "seller"}
-                    onChange={handleChange}
-                    className="mr-3 accent-[#2C2420]"
-                  />
-                  <span className="text-sm font-sans-elegant text-[#2C2420]">
-                    ✨ Vendedora - Quiero vender prendas
                   </span>
                 </label>
               </div>

@@ -115,7 +115,6 @@ const ProductForm = () => {
 
   const conditions = [
     { value: "new", label: "Nuevo" },
-    { value: "used", label: "Pre-loved" },
   ];
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

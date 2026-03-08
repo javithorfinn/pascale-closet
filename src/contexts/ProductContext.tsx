@@ -227,7 +227,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
       setProducts((prevProducts) => [
         ...prevProducts,
-        result.product || result,
+        result.product,
       ]);
 
       toast({
@@ -235,7 +235,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         tunner: 20,
         message: <div>Producto publicado exitosamente!</div>,
       });
-      await fetchProducts();
+  
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Error desconocido";
       setError(message);
