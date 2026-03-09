@@ -196,7 +196,7 @@ const ProductManagement = () => {
                             )}
                           </div>
                           <div>
-                            <Link to={`/product/${product.id}`} className="font-sans-elegant font-medium text-sm text-[#2C2420] truncate">
+                            <Link to={`/product/${product.id}`} className="font-sans-elegant font-medium text-sm text-[#2C2420] truncate hover:underline">
                               {product.name}
                             </Link>
                             <p className="text-[10px] text-[#7A6B5A] font-sans-elegant">

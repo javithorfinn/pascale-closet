@@ -75,7 +75,7 @@ const SellerOrderDetail = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-12">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Back Button */}
         <Link
           to="/seller/orders"
