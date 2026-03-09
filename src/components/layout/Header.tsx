@@ -175,7 +175,10 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
         {/* Mobile menu button */}
         <button
           className="sm:hidden p-2 hover:bg-[#F5F0EB] transition-colors duration-200"
-          onClick={() => setIsMenuOpen(true)}
+          onClick={() => {
+            document.body.style.overflow = "hidden";
+            setIsMenuOpen(true)
+          }}
         >
           <Menu size={22} className="text-[#2C2420]" />
         </button>
@@ -254,156 +257,158 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
           onClick={() => {
             setIsMenuOpen(false);
             setIsTabOpen(false);
+            document.body.style.overflow = "auto";
           }}
         ></div>
       )}
-      
+
       <aside className={`fixed top-0 left-0 md:w-80 w-full h-dvh overflow-y-auto 
         bg-[#FAF8F5] shadow-xl z-50 p-6 flex flex-col gap-4 transition-transform duration-500
         ${isMenuOpen ? "translate-x-0" : "-translate-x-[100%]"}
         `}>
-            <div className="flex justify-between items-center mb-6 pb-4 border-b border-[#E0D6CC]">
-              <h2 className="font-sans-elegant text-lg uppercase tracking-wider text-[#2C2420]">
-                Menú
-              </h2>
-              <button
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-[#E0D6CC]">
+          <h2 className="font-sans-elegant text-lg uppercase tracking-wider text-[#2C2420]">
+            Menú
+          </h2>
+          <button
+            onClick={() => {
+              setIsMenuOpen(false);
+              setIsTabOpen(false);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <X
+              size={22}
+              className="text-[#7A6B5A] hover:text-[#2C2420] transition-colors duration-200"
+            />
+          </button>
+        </div>
+
+        {isAuthenticated ? (
+          <div className="flex flex-col font-sans-elegant gap-4">
+            <Link
+              to="/user/profile"
+              className="flex items-center gap-3 text-[#2C2420]"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsTabOpen(false);
+              }}
+            >
+              <img
+                src={(user && user.avatar) ?? "/assets/user.png"}
+                width={24}
+                height={24}
+                alt="Avatar del usuario"
+                className="rounded-full border border-[#E0D6CC] object-cover aspect-square"
+              />
+              <span className="font-medium">
+                {(user && user.name) || "Sin Nombre"}{" "}
+                {(user && user.lastname) || "Sin Nombre"}
+              </span>
+            </Link>
+            <Link
+              to="/"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsTabOpen(false);
+              }}
+              className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
+            >
+              <Home size={18} /> Inicio
+            </Link>
+            {userRole === "seller" && (
+              <Link
+                to="/seller/dashboard"
                 onClick={() => {
                   setIsMenuOpen(false);
                   setIsTabOpen(false);
                 }}
+                className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
               >
-                <X
-                  size={22}
-                  className="text-[#7A6B5A] hover:text-[#2C2420] transition-colors duration-200"
-                />
-              </button>
-            </div>
-
-            {isAuthenticated ? (
-              <div className="flex flex-col font-sans-elegant gap-4">
-                <Link
-                  to="/user/profile"
-                  className="flex items-center gap-3 text-[#2C2420]"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    setIsTabOpen(false);
-                  }}
-                >
-                  <img
-                    src={(user && user.avatar) ?? "/assets/user.png"}
-                    width={24}
-                    height={24}
-                    alt="Avatar del usuario"
-                    className="rounded-full border border-[#E0D6CC] object-cover aspect-square"
-                  />
-                  <span className="font-medium">
-                    {(user && user.name) || "Sin Nombre"}{" "}
-                    {(user && user.lastname) || "Sin Nombre"}
-                  </span>
-                </Link>
-                <Link
-                  to="/"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    setIsTabOpen(false);
-                  }}
-                  className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
-                >
-                  <Home size={18} /> Inicio
-                </Link>
-                {userRole === "seller" && (
-                  <Link
-                    to="/seller/dashboard"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setIsTabOpen(false);
-                    }}
-                    className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
-                  >
-                    <LayoutDashboard size={18} /> Panel Vendedor
-                  </Link>
-                )}
-                {userRole === "buyer" && (
-                  <Link
-                    to="/buyer/orders"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
-                  >
-                    <ShoppingBag size={18} /> Mis Compras
-                  </Link>
-                )}
-                <button
-                  onClick={() => setIsTabOpen(!isTabOpen)}
-                  className="flex items-center justify-between gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
-                >
-                  <div className="inline-flex gap-3 items-center">
-                    <Shirt size={18} /> Categorías
-                  </div>
-                  <ChevronRight
-                    size={18}
-                    className="translate-y-0.5 transition-transform duration-300"
-                    style={{ rotate: isTabOpen ? "90deg" : "" }}
-                  />
-                </button>
-                {isTabOpen && (
-                  <div className="grid grid-cols-3 gap-1">
-                    {cleanedProducts
-                      ? cleanedProducts.map((product) => {
-                        const images = JSON.parse(product.image || "[]");
-                        return (
-                          <Link
-                            key={product.id}
-                            to={`/products/category/${product.category}`}
-                            onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
-                          >
-                            <picture className="relative hover:brightness-125 hover:scale-101">
-                              <div className="absolute top-0 left-0 w-full h-full bg-zinc-950/50" />
-                              <img
-                                src={`${images[0]}`}
-                                width={80}
-                                height={80}
-                                className="aspect-[2/4] object-cover"
-                              />
-                              <small className="capitalize text-xs absolute bottom-0 left-[50%] translate-[-50%] text-white font-semibold">
-                                {product.category}
-                              </small>
-                            </picture>
-                          </Link>
-                        )
-                      })
-                      : null}
-                  </div>
-                )}
-                <button
-                  onClick={() => {
-                    onLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center gap-3 text-[#DC3545] hover:underline mt-4 pt-4 border-t border-[#E0D6CC]"
-                >
-                  <LogOut size={18} /> Salir
-                </button>
+                <LayoutDashboard size={18} /> Panel Vendedor
+              </Link>
+            )}
+            {userRole === "buyer" && (
+              <Link
+                to="/buyer/orders"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
+              >
+                <ShoppingBag size={18} /> Mis Compras
+              </Link>
+            )}
+            <button
+              onClick={() => setIsTabOpen(!isTabOpen)}
+              className="flex items-center justify-between gap-3 text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
+            >
+              <div className="inline-flex gap-3 items-center">
+                <Shirt size={18} /> Categorías
               </div>
-            ) : (
-              <div className="flex flex-col gap-4 font-sans-elegant">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-[#2C2420] hover:underline"
-                >
-                  Ingresar
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-[#2C2420] font-medium hover:underline"
-                >
-                  Registrarse
-                </Link>
+              <ChevronRight
+                size={18}
+                className="translate-y-0.5 transition-transform duration-300"
+                style={{ rotate: isTabOpen ? "90deg" : "" }}
+              />
+            </button>
+            {isTabOpen && (
+              <div className="grid grid-cols-3 gap-1">
+                {cleanedProducts
+                  ? cleanedProducts.map((product) => {
+                    const images = JSON.parse(product.image || "[]");
+                    return (
+                      <Link
+                        key={product.id}
+                        to={`/products/category/${product.category}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center text-[#2C2420] hover:text-[#7A6B5A] transition-colors duration-200"
+                      >
+                        <picture className="relative hover:brightness-125 hover:scale-101">
+                          <div className="absolute top-0 left-0 w-full h-full bg-zinc-950/50" />
+                          <img
+                            src={`${images[0]}`}
+                            width={80}
+                            height={80}
+                            className="aspect-[2/4] object-cover"
+                          />
+                          <small className="capitalize text-xs absolute bottom-0 left-[50%] translate-[-50%] text-white font-semibold">
+                            {product.category}
+                          </small>
+                        </picture>
+                      </Link>
+                    )
+                  })
+                  : null}
               </div>
             )}
-          </aside>
+            <button
+              onClick={() => {
+                onLogout();
+                setIsMenuOpen(false);
+              }}
+              className="flex items-center gap-3 text-[#DC3545] hover:underline mt-4 pt-4 border-t border-[#E0D6CC]"
+            >
+              <LogOut size={18} /> Salir
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 font-sans-elegant">
+            <Link
+              to="/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-[#2C2420] hover:underline"
+            >
+              Ingresar
+            </Link>
+            <Link
+              to="/register"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-[#2C2420] font-medium hover:underline"
+            >
+              Registrarse
+            </Link>
+          </div>
+        )}
+      </aside>
     </header>
   );
 };
