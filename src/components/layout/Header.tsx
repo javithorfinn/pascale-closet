@@ -341,7 +341,7 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
               />
             </button>
             {isTabOpen && (
-              <div className="grid grid-cols-4">
+              <div className="grid grid-cols-5 gap-0.5">
                 {cleanedProducts
                   ? cleanedProducts.map((product) => {
                     const images = JSON.parse(product.image || "[]");
