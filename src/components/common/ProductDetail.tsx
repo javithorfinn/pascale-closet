@@ -164,7 +164,14 @@ const ProductDetail = () => {
   };
 
   const handleShowSizes = () => {
-    setShowSizes(!showSizes);
+    if (showSizes) {
+      setShowSizes(false);
+      document.body.style.overflow = "auto";
+    } else {
+      setShowSizes(true);
+      document.body.style.overflow = "hidden";
+    }
+    
   };
 
   const toggleAccordion = (section: string) => {
@@ -221,11 +228,21 @@ const ProductDetail = () => {
     );
   }
 
+  const handleOpenDialog = () => {
+    if (openDialog) {
+      setOpenDialog(false);
+      document.body.style.overflow = "auto";
+    } else {
+      setOpenDialog(true);
+      document.body.style.overflow = "hidden";
+    }
+  }
+
   if (openDialog) {
     return (
       <section className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-md">
         <button
-          onClick={() => setOpenDialog(false)}
+          onClick={handleOpenDialog}
           className="absolute top-4 right-4 z-[999] w-10 h-10 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
         >
           <X className="w-6 h-6 text-white" />
@@ -303,7 +320,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div
               className="relative aspect-square bg-[#F5F0EB] overflow-hidden group cursor-zoom-in max-w-md mx-auto lg:mx-0"
-              onClick={() => setOpenDialog(!openDialog)}
+              onClick={handleOpenDialog}
             >
               {product.image ? (
                 <img
@@ -323,7 +340,7 @@ const ProductDetail = () => {
               {/* Thumbnails */}
               <div className="absolute bottom-4 left-4 flex gap-2">
                 <button className="w-12 h-12 bg-white border-2 border-[#2C2420] overflow-hidden">
-                  {product.image ? (
+                  {product.image && images.length > 2 ? (
                     <img
                       src={images[1]}
                       alt=""
@@ -336,18 +353,18 @@ const ProductDetail = () => {
               </div>
               {images.length > 2 && (
                 <div className="absolute bottom-4 left-18 flex gap-2">
-                <button className="w-12 h-12 bg-white border-2 border-[#2C2420] overflow-hidden">
-                  {product.image ? (
-                    <img
-                      src={images[1]}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-[#F5F0EB]"></div>
-                  )}
-                </button>
-              </div>
+                  <button className="w-12 h-12 bg-white border-2 border-[#2C2420] overflow-hidden">
+                    {product.image ? (
+                      <img
+                        src={images[1]}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#F5F0EB]"></div>
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -465,16 +482,21 @@ const ProductDetail = () => {
             </div>
 
             {showSizes && (
-              <>
-                <div
-                  className="fixed w-full h-dvh top-0 left-0 bg-zinc-900/50 z-50 backdrop-blur-sm"
-                  onClick={() => setShowSizes(false)}
-                />
+              <div
+                className="fixed w-full h-dvh top-0 left-0 bg-zinc-900/50 z-50 backdrop-blur-sm"
+                onClick={() => {
+                  setShowSizes(false)
+                  document.body.style.overflow = "auto";
+                }}
+              />
+            )}
+
+            {showSizes && (
                 <div
                   ref={showSizesRef}
                   className={`fixed right-0 top-0 z-50 h-dvh md:w-[400px] bg-white/95 backdrop-blur-sm border-l border-[#E0D6CC] shadow-lg
                    transition-transform duration-600 
-                   ${showSizes ? "translate-x-0" : "-translate-x-full"}
+                   ${showSizes ? "translate-x-0" : "-translate-x-[100%]"}
                    `}
                 >
                   <div className="p-6 flex flex-col gap-4 h-full overflow-y-auto">
@@ -483,10 +505,11 @@ const ProductDetail = () => {
                     </h3>
 
                     <button
-                      className="absolute top-[22px] right-4"
+                      title="Cerrar"
+                      className="absolute top-4 right-4 z-[999] bg-white/10 hover:bg-black/20 flex items-center justify-center transition-colors ring-4 ring-foreground/10"
                       onClick={() => setShowSizes(false)}
                     >
-                      <X className="text-[#E0D6CC] hover:bg-black/30" />
+                      <X className="text-[#E0D6CC]" />
                     </button>
 
                     <p className="text-sm text-gray-700 leading-relaxed">
@@ -530,7 +553,6 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 </div>
-              </>
             )}
 
             {/* Cantidad */}
