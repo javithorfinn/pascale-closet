@@ -243,7 +243,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       await fetch(`${import.meta.env.BASE_URL}/api/loger`, {
         method: "POST",
         headers: { "COntent-Type": "application/json" },
-        body: JSON.stringify({ log: message })
+        body: JSON.stringify({ log: err })
       })
     } finally {
       setLoading(false);
@@ -327,7 +327,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       await fetch(`${import.meta.env.BASE_URL}/api/loger`, {
         method: "POST",
         headers: { "COntent-Type": "application/json" },
-        body: JSON.stringify({ log: message })
+        body: JSON.stringify({ log: err })
       })
     } finally {
       setLoading(false);
