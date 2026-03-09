@@ -352,7 +352,7 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
               />
             </button>
             {isTabOpen && (
-              <div className="grid grid-cols-3 gap-1">
+              <div className="grid grid-cols-4 gap-1">
                 {cleanedProducts
                   ? cleanedProducts.map((product) => {
                     const images = JSON.parse(product.image || "[]");
@@ -371,7 +371,7 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
                             height={80}
                             className="aspect-[2/4] object-cover"
                           />
-                          <small className="capitalize text-xs absolute bottom-0 left-[50%] translate-[-50%] text-white font-semibold">
+                          <small className="capitalize text-[10px] absolute bottom-0 left-[50%] translate-x-[-50%] text-white">
                             {product.category}
                           </small>
                         </picture>
@@ -385,6 +385,7 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
               onClick={() => {
                 onLogout();
                 setIsMenuOpen(false);
+                document.body.style.overflow = "auto";
               }}
               className="flex items-center gap-3 text-[#DC3545] hover:underline mt-4 pt-4 border-t border-[#E0D6CC]"
             >
@@ -396,14 +397,20 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
             <div className="flex flex-col gap-4 font-sans-elegant">
               <Link
                 to="/login"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  document.body.style.overflow = "auto";
+                }}
                 className="text-[#2C2420] hover:underline"
               >
                 Ingresar
               </Link>
               <Link
                 to="/register"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  document.body.style.overflow = "auto";
+                }}
                 className="text-[#2C2420] font-medium hover:underline"
               >
                 Registrarse
