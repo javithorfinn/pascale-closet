@@ -371,7 +371,10 @@ const Header = ({ isAuthenticated, user, userRole, onLogout, isLoading }: Header
               </div>
             )}
             <button
-              onClick={handleCloseMenu}
+              onClick={() => {
+                onLogout();
+                handleCloseMenu();
+              }}
               className="flex items-center gap-3 text-[#DC3545] hover:underline mt-4 pt-4 border-t border-[#E0D6CC]"
             >
               <LogOut size={18} /> Salir
