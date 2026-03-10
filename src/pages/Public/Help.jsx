@@ -123,7 +123,7 @@ export const Help = () => {
                 <tbody className="font-sans-elegant text-sm">
                   <tr>
                     <td className="border border-[#E0D6CC] p-3 text-[#7A6B5A]">Chile</td>
-                    <td className="border border-[#E0D6CC] p-3 text-[#2C2420] font-medium">5-7 días hábiles</td>
+                    <td className="border border-[#E0D6CC] p-3 text-[#2C2420] font-medium">2-5 días hábiles</td>
                   </tr>
                   
                 </tbody>
