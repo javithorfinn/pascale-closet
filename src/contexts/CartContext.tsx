@@ -276,11 +276,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            user_id: user?.user_id,
             total: getCartTotal(),
             items: cartItems,
             ...shipping
           }),
+          credentials: "include"
         },
       );
 
