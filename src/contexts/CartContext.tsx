@@ -276,11 +276,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            user_id: user?.user_id,
             total: getCartTotal(),
             items: cartItems,
             ...shipping
           }),
+          credentials: "include"
         },
       );
 
@@ -288,6 +288,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
       if (data.init_point) {
         setPreferenceId(data.order_id);
+        clearCart();
         window.open(data.init_point, "_blank");
       } else {
         console.error("No se recibió init_point del backend");
