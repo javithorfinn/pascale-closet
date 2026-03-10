@@ -1,16 +1,20 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-// Sin "runtime: edge" — handleUpload requiere Node.js (usa crypto, stream, etc.)
+// Node.js runtime (default) — handleUpload requiere crypto, stream, etc.
 
-export default async function handler(request: Request): Promise<Response> {
-  const body = (await request.json()) as HandleUploadBody;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const body = req.body as HandleUploadBody;
 
   try {
     const jsonResponse = await handleUpload({
       body,
-      request,
+      request: req,
       onBeforeGenerateToken: async () => {
-        // Aquí podrías validar sesión del usuario si lo necesitas
         return {
           allowedContentTypes: [
             "image/jpeg",
@@ -30,16 +34,8 @@ export default async function handler(request: Request): Promise<Response> {
       },
     });
 
-    return new Response(JSON.stringify(jsonResponse), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(200).json(jsonResponse);
   } catch (error) {
-    return new Response(
-      JSON.stringify({ error: (error as Error).message }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return res.status(400).json({ error: (error as Error).message });
   }
 }
