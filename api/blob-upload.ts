@@ -1,6 +1,6 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 
-export const config = { runtime: "edge" };
+// Sin "runtime: edge" — handleUpload requiere Node.js (usa crypto, stream, etc.)
 
 export default async function handler(request: Request): Promise<Response> {
   const body = (await request.json()) as HandleUploadBody;
