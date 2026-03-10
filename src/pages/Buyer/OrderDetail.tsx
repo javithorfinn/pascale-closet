@@ -10,18 +10,12 @@ import {
   Calendar,
   Hash,
   Clock,
-  CheckCircle,
-  AlertCircle,
-  Truck,
-  Trash2,
 } from "lucide-react";
-import { closeDialog, showDialog } from "../../components/common/Dialog";
-import { useCart } from "../../contexts/CartContext";
+import { getStatusColor, getStatusIcon, getStatusLabel } from "../../utils/orderStatus";
 
 const OrderDetail = () => {
   const { id } = useParams();
-  const { orders, deleteOrderById } = useOrder();
-  const { getCartTotal, MAX_PAYMENT, SHIPMENT_COST } = useCart();
+  const { orders } = useOrder();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -36,89 +30,7 @@ const OrderDetail = () => {
     }
   }, [orders, id, navigate]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "approved":
-        return "bg-[#F0FFF0] border-[#2C2420] text-[#2C2420]";
-      case "pending":
-        return "bg-[#FFF9E6] border-[#2C2420] text-[#2C2420]";
-      case "cancelled":
-      case "Cancelado":
-        return "bg-[#FFF0F0] border-[#2C2420] text-[#2C2420]";
-      case "En Tránsito":
-        return "bg-[#F5F0EB] border-[#2C2420] text-[#2C2420]";
-      default:
-        return "bg-[#F5F0EB] border-[#E0D6CC] text-[#7A6B5A]";
-    }
-  };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "approved":
-        return <CheckCircle size={16} className="mr-2" />;
-      case "pending":
-        return <Clock size={16} className="mr-2" />;
-      case "cancelled":
-      case "Cancelado":
-        return <AlertCircle size={16} className="mr-2" />;
-      case "En Tránsito":
-        return <Truck size={16} className="mr-2" />;
-      default:
-        return <Package size={16} className="mr-2" />;
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "approved":
-        return "Pago Aprobado";
-      case "pending":
-        return "Pendiente de Pago";
-      case "cancelled":
-      case "Cancelado":
-        return "Cancelado";
-      case "En Tránsito":
-        return "En Tránsito";
-      default:
-        return status;
-    }
-  };
-
-  const handleDeleteOrder = () => {
-    if (!order) return;
-    showDialog({
-      content: (
-        <div className="text-center">
-          <div className="w-16 h-16 bg-[#F5F0EB] rounded-full flex items-center justify-center mx-auto mb-4">
-            <Trash2 className="w-8 h-8 text-[#2C2420]" />
-          </div>
-          <p className="text-[#2C2420] font-sans-elegant font-medium mb-2">
-            ¿Estás segura de anular la orden {order.order_number}?
-          </p>
-          <p className="text-sm text-[#7A6B5A] font-sans-elegant mb-6">
-            Esta acción no se puede deshacer. Se eliminará la orden.
-          </p>
-          <div className="flex gap-3 justify-center">
-            <button
-              onClick={closeDialog}
-              className="px-5 py-2.5 border border-[#E0D6CC] text-[#7A6B5A] font-sans-elegant text-xs tracking-wide uppercase hover:bg-[#F5F0EB] transition-all duration-200"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={async () => {
-                await deleteOrderById(order.id);
-                closeDialog();
-              }}
-              className="px-5 py-2.5 bg-[#2C2420] text-white font-sans-elegant text-xs tracking-wide uppercase hover:bg-[#333333] transition-all duration-200"
-            >
-              Anular Orden
-            </button>
-          </div>
-        </div>
-      ),
-    });
-  };
 
   if (loading) {
     return (
@@ -185,20 +97,12 @@ const OrderDetail = () => {
               <h2 className="font-sans-elegant text-sm uppercase tracking-wider text-[#2C2420]">
                 Información del Pedido
               </h2>
-              <aside className="flex gap-3 items-center">
-                <button
-                  onClick={() => handleDeleteOrder()}
-                  className="px-4 py-2 border text-xs font-sans-elegant uppercase tracking-wide bg-destructive text-white hover:opacity-80 transition-opacity"
-                >
-                  Anular Orden
-                </button>
-                <div
-                  className={`px-4 py-2 border text-xs font-sans-elegant uppercase tracking-wide flex items-center ${getStatusColor(order.status)}`}
-                >
-                  {getStatusIcon(order.status)}
-                  {getStatusLabel(order.status)}
-                </div>
-              </aside>
+              <div
+                className={`px-4 py-2 border text-xs font-sans-elegant uppercase tracking-wide flex items-center ${getStatusColor(order.status)}`}
+              >
+                {getStatusIcon(order.status)}
+                {getStatusLabel(order.status)}
+              </div>
             </div>
           </div>
 
@@ -345,32 +249,13 @@ const OrderDetail = () => {
                 ${Number(order.total).toLocaleString("es-CL")}
               </span>
             </div>
-            <div className="flex justify-between items-center py-3 border-b border-[#E0D6CC]">
-              <span className="text-[#7A6B5A] font-sans-elegant text-sm">
-                Envío
-              </span>
-              <span className="text-[#2C2420]">
-                {getCartTotal() < MAX_PAYMENT
-                  ? `$${SHIPMENT_COST.toLocaleString("es-CL")}`
-                  : "Envío gratis"}
-              </span>
-            </div>
             <div className="flex justify-between items-center py-4">
               <span className="text-[#2C2420] font-sans-elegant text-sm uppercase tracking-wider font-medium">
                 Total
               </span>
-              {getCartTotal() < MAX_PAYMENT ? (
-                <span className="text-[#2C2420] font-sans-elegant text-xl">
-                  $
-                  {Number(
-                    Math.floor(order.total) + SHIPMENT_COST,
-                  ).toLocaleString("es-CL")}
-                </span>
-              ) : (
-                <span className="text-[#2C2420] font-sans-elegant text-xl">
-                  ${Number(order.total).toLocaleString("es-CL")}
-                </span>
-              )}
+              <span className="text-[#2C2420] font-sans-elegant text-xl">
+                ${Number(order.total).toLocaleString("es-CL")}
+              </span>
             </div>
           </div>
         </div>

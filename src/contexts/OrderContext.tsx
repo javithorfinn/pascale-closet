@@ -204,6 +204,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
           credentials: "include",
         },
       );
+      
       const order = await response.json();
       if (!response.ok) {
         throw new Error(order.message);

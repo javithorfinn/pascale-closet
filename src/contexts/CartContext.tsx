@@ -288,6 +288,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
       if (data.init_point) {
         setPreferenceId(data.order_id);
+        clearCart();
         window.open(data.init_point, "_blank");
       } else {
         console.error("No se recibió init_point del backend");
